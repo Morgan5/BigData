@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Importation de données vers MongoDB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Importer et Afficher des données de trafic</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="message {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+            <div class="form-group">
+                <input type="file" name="file" accept=".xlsx">
+            </div>
+            <button type="submit">Importer</button>
+        </form>
+
+        {% if traffic_data %}
+        <h2>Données importées</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Direction</th>
+                        <th>Région</th>
+                        <th>Localité</th>
+                        <th>Route</th>
+                        <th>Type</th>
+                        <th>Mesures</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in traffic_data %}
+                    <tr>
+                        <td>{{ item.count_point_id }}</td>
+                        <td>{{ item.direction_of_travel }}</td>
+                        <td>{{ item.region_name }}</td>
+                        <td>{{ item.local_authority_name }}</td>
+                        <td>{{ item.road.name }}</td>
+                        <td>{{ item.road.type }}</td>
+                        <td class="measures" title="{% for m in item.measures %}{{ m.count_date }} - {{ m.hour }}h: {{ m.cars_and_taxis }} voitures, {{ m.buses_and_coaches }} bus, {{ m.lgvs }} lgv, {{ m.pedal_cycles }} vélos
+{% endfor %}">{{ item.measures|length }} enregistrements</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
