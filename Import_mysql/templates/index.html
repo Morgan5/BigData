@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Import CSV vers MySQL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">  
+</head>
+<body>
+    <div class="container">
+        <h1>Importer un fichier CSV vers MySQL</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+            <div class="form-group">
+                <input type="file" name="file" accept=".csv" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">📥 Importer</button>
+            </div>
+        </form>
+
+        {% if traffic_data %}
+        <h2>Données importées</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Région</th>
+                        <th>Autorité locale</th>
+                        <th>Route</th>
+                        <th>Direction</th>
+                        <th>Voitures</th>
+                        <th>Bus</th>
+                        <th>Vélos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in traffic_data %}
+                    <tr>
+                        <td>{{ row.count_date }}</td>
+                        <td>{{ row.hour }}</td>
+                        <td>{{ row.region_name }}</td>
+                        <td>{{ row.authority_name }}</td>
+                        <td>{{ row.road_name }}</td>
+                        <td>{{ row.direction_of_travel }}</td>
+                        <td>{{ row.cars_and_taxis }}</td>
+                        <td>{{ row.buses_and_coaches }}</td>
+                        <td>{{ row.pedal_cycles }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
