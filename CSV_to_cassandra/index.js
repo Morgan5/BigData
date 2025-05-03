@@ -17,6 +17,8 @@ const client = new cassandra.Client({
 const storage = multer.memoryStorage(); // Stocker le fichier en mémoire
 const upload = multer({ storage: storage });
 
+app.use(express.static('public'));
+
 app.post('/import', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).send('Aucun fichier n\'a été envoyé.');
